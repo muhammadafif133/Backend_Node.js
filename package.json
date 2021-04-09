@@ -1,0 +1,26 @@
+{
+  "name": "coursework-submission-backend",
+  "version": "1.0.0",
+  "description": "backend coursework submission",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.coventry.ac.uk/6003CEM-2021JANMAY/coursework_submission_backend_10685675.git"
+  },
+  "keywords": [
+    "backend",
+    "coursework",
+    "submission"
+  ],
+  "author": "Muhammad Afif bin Zainuddin",
+  "license": "ISC",
+  "dependencies": {
+    "koa": "^2.13.1",
+    "koa-bodyparser": "^4.3.0",
+    "koa-router": "^10.0.0",
+    "promise-mysql": "^5.0.3"
+  }
+}

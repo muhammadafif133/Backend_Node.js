@@ -1,45 +1,65 @@
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
-const model = require('../models/listings');
+const listings = require('../models/listings');
 
 const router = Router({prefix: '/api/v1/listings'});
 
+//define listing routes used
 router.get('/', getAll);
 router.post('/', bodyParser(), createListings);
 router.get('/:id([0-9]{1,})', getById);
 router.put('/:id([0-9]{1,})', bodyParser(), updateListings);
 router.del('/:id([0-9]{1,})', deleteListings);
 
+
 async function getAll(ctx) {
-  let listing = await model.getAll();
-  if (listings.length) {
-    ctx.body = listings;
+  const {page=1, limit=100, order="dateCreated", direction='ASC'} = ctx.request.query;
+  const result = await listings.getAll(page, limit, order, direction);
+  if (result.length) {
+    ctx.body = result;
   }
 }
 
 async function getById(ctx) {
-  let id = ctx.params.id;
-  let listing = await model.getById(id);
-  if (listing.length) {
-    ctx.body = listings[0];
+  const id = ctx.params.id;
+  const result = await listings.getById(id);
+  if (result.length) {
+    const listing = result[0];
+    ctx.body = listing;
   }
 }
 
 async function createListings(ctx) {
   const body = ctx.request.body;
-  let result = await model.add(body);
-  if (result) {
+  let result = await listings.add(body);
+  if (result.affectedRows) {
     ctx.status = 201;
-    ctx.body = {ID: result.insertId}
+    ctx.body = {ID: id, created: true, link: '${ctx.request.path}/${id}'};
   }
 }
 
 async function updateListings(ctx) {
-  // TODO edit an existing article
+  const id = ctx.params.id;
+  let result = await listings.getById(id); //check whether it exists
+  if (result.length){
+    let listing = result[0];
+    //exclude fields that should not be updated
+     const {ID, dateCreated, dateModified, employeeID, ...body} = ctx.request.body;
+    //overwrite updatable fileds with remaining body data
+    Object.assign(listing, body);
+    result = await listings.update(listing);
+    if (result.affectedRows){
+      ctx.body = {ID: id, updated: true, link: ctx.request.path};
+    }
+  }
 }
 
 async function deleteListings(ctx) {
-  // TODO delete an existing article
+  const id = ctx.params.id;
+  const result = await listings.delById(id)
+  if (result.affectedRows){
+    ctx.body = {ID: id, deleted: true}
+  }
 }
 
 module.exports = router;

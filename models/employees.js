@@ -38,3 +38,10 @@ exports.update = async function update (employee) {
   const data = await db.run_query(query, values);
   return data;
 }
+
+//get a single user by the (unique) username
+exports.findByUsername = async function getByUsername (username){
+  const query = "SELECT * FROM employee WHERE username = ?;";
+  const employee = await db.run_query(query, username);
+  return employee;
+}

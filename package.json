@@ -18,6 +18,8 @@
   "author": "Muhammad Afif bin Zainuddin",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "jsonschema": "^1.4.0",
     "koa": "^2.13.1",
     "koa-bodyparser": "^4.3.0",
     "koa-passport": "^4.1.4",

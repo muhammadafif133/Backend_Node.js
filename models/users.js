@@ -8,6 +8,13 @@ exports.getById = async function getById (id) {
   return data;
 }
 
+//get a single user by the (unique) username
+exports.findByUsername = async function getByUsername(userUsername) {
+  const query = "SELECT * FROM users WHERE userUsername = ?;";
+  const user = await db.run_query(query, userUsername);
+  return user;
+}
+
 //list all the users in the database
 exports.getAll = async function getAll (page, limit, order) {
   // TODO: use page, limit, order to give pagination
@@ -39,9 +46,3 @@ exports.update = async function update (user) {
   return data;
 }
 
-//get a single user by the (unique) username
-exports.findByUsername = async function getByUsername (username){
-  const query = "SELECT * FROM users WHERE username = ?;";
-  const user = await db.run_query(query, username);
-  return user;
-}

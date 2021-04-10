@@ -1,9 +1,11 @@
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const model = require('../models/employees');
+const bcrypt = require('bcrypt');
 
 const router = Router({prefix: '/api/v1/employees'});
 
+//define routes for employees
 router.get('/', getAll);
 router.post('/', bodyParser(), createEmployee);
 router.get('/:id([0-9]{1,})', getById);
@@ -28,6 +30,8 @@ async function getById(ctx) {
 
 async function createEmployee(ctx) {
   const body = ctx.request.body;
+  const hash = bcrypt.hashSync(body.password, 10);
+  body.password = hash; 
   const result = await model.add(body);
   if (result.affectedRows) {
     const id = result.insertId;

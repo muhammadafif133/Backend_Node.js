@@ -1,6 +1,7 @@
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const model = require('../models/users');
+const bcrypt = require('bcrypt');
 
 const router = Router({prefix: '/api/v1/users'});
 
@@ -29,6 +30,8 @@ async function getById(ctx) {
 
 async function createUser(ctx) {
   const body = ctx.request.body;
+  const hash = bcrypt.hashSync(body.password, 10);
+  body.password = hash;
   const result = await model.add(body);
   if (result.affectedRows) {
     const id = result.insertId;

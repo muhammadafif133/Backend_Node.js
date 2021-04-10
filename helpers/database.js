@@ -14,7 +14,7 @@ exports.run_query = async function run_query(query, values){
     //handliing unknown error from being propagate up to response object
     
     const errorId = uuidv4();
-    console.error(Date.now(), errorId, query, values, eroror.message);
+    console.error(Date.now(), errorId, query, values, error.message);
     throw new DatabaseException("Database error.", error.code, errorId);
   }
 }

@@ -20,7 +20,7 @@ function publicAPI(ctx) {
 function usersPrivateAPI(ctx){
   const user = ctx.state.user; //this will be accessed by the done(null, user) in strategy and add user value as 'ctx.state.user'
   ctx.body = {
-    message: 'Hello ${username} you registered on ${user.dateRegistered}'
+    message: 'Hello ${userUsername} you registered on ${user.dateRegistered}'
   }
 }
 
@@ -28,9 +28,8 @@ function usersPrivateAPI(ctx){
 function employeesPrivateAPI(ctx){
   const employee = ctx.state.user; //this will be accessed by the done(null, user) in strategy and add employee value as 'ctx.state.user'
   ctx.body = {
-    message: 'Hello ${username} you registered on ${user.dateRegistered}'
+    message: 'Hello ${empUsername} you registered on ${user.dateRegistered}'
   }
 }
-
 
 module.exports = router;

@@ -1,14 +1,15 @@
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const listings = require('../models/listings');
+const {validateListings} = require('../controllers/validation');
 
 const router = Router({prefix: '/api/v1/listings'});
 
 //define listing routes used
 router.get('/', getAll);
-router.post('/', bodyParser(), createListings);
+router.post('/', bodyParser(), validateListings, createListings);
 router.get('/:id([0-9]{1,})', getById);
-router.put('/:id([0-9]{1,})', bodyParser(), updateListings);
+router.put('/:id([0-9]{1,})', bodyParser(), validateListings, updateListings);
 router.del('/:id([0-9]{1,})', deleteListings);
 
 

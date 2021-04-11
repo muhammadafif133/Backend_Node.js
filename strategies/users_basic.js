@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt');
 
 const verifyPassword = function (user, password) {
   // compare user.password with the password supplied
-  return bcrypt.compareSync(password, user.password);
+  const isMatch = bcrypt.compareSync(password, user.password);
+  return isMatch;
 }
 
 const checkUserAndPass = async (userUsername, password, done) => {

@@ -1,17 +1,31 @@
 const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
-const listings = require('../models/listings');
-const {validateListings} = require('../controllers/validation');
 
-const router = Router({prefix: '/api/v1/listings'});
+const employeeAuth = require('../controllers/employees_auth');
+const userAuth = require('../controllers/users_auth');
+
+const listings = require('../models/listings');
+const favourites = require('../models/favourites');
+
+const {validateListing} = require('../controllers/validation');
+
+const prefix = '/api/v1/articles';
+const router = Router({prefix: prefix});
 
 //define listing routes used
 router.get('/', getAll);
-router.post('/', bodyParser(), validateListings, createListings);
+router.post('/', employeeAuth, bodyParser(), validateListing, createListings);
 router.get('/:id([0-9]{1,})', getById);
-router.put('/:id([0-9]{1,})', bodyParser(), validateListings, updateListings);
-router.del('/:id([0-9]{1,})', deleteListings);
+router.put('/:id([0-9]{1,})', employeeAuth, bodyParser(), validateListing, updateListings);
+router.del('/:id([0-9]{1,})', employeeAuth, deleteListings);
 
+//define favourite routes used
+router.get('/:id([0-9]{1,})/favourites', userAuth, listByUserId);
+router.post('/:id([0-9]{1,})/favourites', userAuth, favouriteList);
+router.del('/:id([0-9]{1,})/favourites', userAuth, delFavouriteList);
+
+//----------------------------------------------------------------------------------
+//listing functions
 
 async function getAll(ctx) {
   const {page=1, limit=100, order="dateCreated", direction='ASC'} = ctx.request.query;
@@ -60,6 +74,36 @@ async function deleteListings(ctx) {
   const result = await listings.delById(id)
   if (result.affectedRows){
     ctx.body = {ID: id, deleted: true}
+  }
+}
+
+//--------------------------------------------------------------------------------
+//favourite functions
+
+async function favouriteList (ctx) {
+  // TODO: add error handling
+  const id = parseInt(ctx.params.id);
+  const uid = ctx.state.user.ID;
+  const result = await favourites.addFavourite(id, uid);
+  console.log(result);
+  ctx.body = result.affectedRows ? {message: "Favourited"} : {message: "error"};
+}
+
+async function delFavouriteList (ctx) {
+  // TODO: remove error handling
+  const id = parseInt(ctx.params.id);
+  const uid = ctx.state.user.ID;
+  const result = await favourites.delFavourite(id, uid);
+  console.log(result);
+  ctx.body = result.affectedRows ? {message: "Remove favourite"} : {message: "error"};
+}
+
+async function listByUserId(ctx){
+  const id = ctx.param.id;
+  const result = await model.getList(id);
+  if (result.length){
+    const list = result[0]
+    ctx.body = list;
   }
 }
 

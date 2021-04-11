@@ -4,7 +4,8 @@ const bcrypt = require('bcrypt');
 
 const verifyPassword = function (employee, password) {
   // compare user.password with the password supplied
-  return bcrypt.compareSync( password, employee.password);
+  const isMatch = bcrypt.compareSync(password, employee.password);
+  return isMatch;
 }
 
 const checkUserAndPass = async (empUsername, password, done) => {
@@ -17,7 +18,7 @@ const checkUserAndPass = async (empUsername, password, done) => {
   } catch (error) {
     console.error(`Error during authentication for employee ${empUsername}`);
     return done(error);
-  }
+  }  
 
   if (result.length) {
     const employee = result[0];

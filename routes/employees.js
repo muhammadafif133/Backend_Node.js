@@ -2,6 +2,7 @@ const Router = require('koa-router');
 const bodyParser = require('koa-bodyparser');
 const model = require('../models/employees');
 const bcrypt = require('bcrypt');
+const can = require('../permissions/employees');
 
 const router = Router({prefix: '/api/v1/employees'});
 
@@ -13,9 +14,14 @@ router.put('/:id([0-9]{1,})', bodyParser(), updateEmployee);
 router.del('/:id([0-9]{1,})', deleteEmployee);
 
 async function getAll(ctx) {
-  const result = await model.getAll();
-  if (result.length) {
-    ctx.body = result;
+  const permission = can.readAll(ctx.state.user);
+  if (!permission.granted){
+    ctx.status = 403;
+  }else{
+    const result = await model.getAll();
+    if (result.length) {
+      ctx.body = result;
+    }
   }
 }
 

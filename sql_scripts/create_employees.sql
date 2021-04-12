@@ -1,5 +1,6 @@
-CREATE TABLE employee (
-      ID INT NOT NULL AUTO_INCREMENT,  
+CREATE TABLE employees (
+      ID INT NOT NULL AUTO_INCREMENT,
+      role VARCHAR(16) NOT NULL DEFAULT 'employee',
       firstName VARCHAR(32),  
       lastName VARCHAR(32),
       empUsername VARCHAR(16) UNIQUE NOT NULL,
@@ -8,5 +9,6 @@ CREATE TABLE employee (
       passwordSalt VARCHAR(256),  
       email VARCHAR(64) UNIQUE NOT NULL,
       avatarURL VARCHAR(64),
-      PRIMARY KEY (ID)
+      PRIMARY KEY (ID),
+      FOREIGN KEY (role) REFERENCES roles (name)
 );

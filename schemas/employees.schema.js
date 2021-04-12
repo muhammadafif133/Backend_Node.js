@@ -13,12 +13,8 @@ module.exports = {
       "description": "Last name",
       "type": "string"
     },
-    "userUsername": {
+    "empUsername": {
       "description": "Unique username",
-      "type": "string"
-    },
-    "about": {
-      "description": "Description of the user",
       "type": "string"
     },
     "password": {
@@ -34,6 +30,6 @@ module.exports = {
       "type": "uri"
     },    
   },
-  "required": ["username", "email", "password"],
+  "required": ["empUsername", "email", "password"],
   "additionalProperties": false
 }

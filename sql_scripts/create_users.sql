@@ -1,6 +1,7 @@
 CREATE TABLE users (
-      ID INT NOT NULL AUTO_INCREMENT,  
-      firstName VARCHAR(32),  
+      ID INT NOT NULL AUTO_INCREMENT,
+      role VARCHAR(16) NOT NULL DEFAULT 'user',
+      firstName VARCHAR(32), 
       lastName VARCHAR(32),
       userUsername VARCHAR(16) UNIQUE NOT NULL,
       about TEXT,
@@ -9,5 +10,6 @@ CREATE TABLE users (
       passwordSalt VARCHAR(256),  
       email VARCHAR(64) UNIQUE NOT NULL,
       avatarURL VARCHAR(64),
-      PRIMARY KEY (ID)
+      PRIMARY KEY (ID),
+      FOREIGN KEY (role) REFERENCES roles (name)
 );

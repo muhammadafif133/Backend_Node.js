@@ -34,6 +34,6 @@ module.exports = {
       "type": "uri"
     },    
   },
-  "required": ["username", "email", "password"],
+  "required": ["userUsername", "email", "password"],
   "additionalProperties": false
 }

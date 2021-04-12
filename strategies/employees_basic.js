@@ -29,7 +29,7 @@ const checkUserAndPass = async (empUsername, password, done) => {
       console.log(`Password incorrect for employee ${empUsername}`);
     }
   } else {
-    console.log(`No user found with username ${empUsername}`);
+    console.log(`No employee found with username ${empUsername}`);
   }
   return done(null, false); // username or password were incorrect
 }

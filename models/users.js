@@ -9,7 +9,7 @@ exports.getById = async function getById (id) {
 }
 
 //get a single user by the (unique) username
-exports.findByUsername = async function getByUsername(userUsername) {
+exports.findByUsername = async function findByUsername(userUsername) {
   const query = "SELECT * FROM users WHERE userUsername = ?;";
   const user = await db.run_query(query, userUsername);
   return user;

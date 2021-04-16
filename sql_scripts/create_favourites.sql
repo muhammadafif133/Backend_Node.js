@@ -1,4 +1,4 @@
-CREATE TABLE favourites (
+CREATE TABLE dogFavourites (
   listingID INT NOT NULL,
   userID INT NOT NULL,
   FOREIGN KEY (listingID) REFERENCES listings (ID) ON DELETE CASCADE,

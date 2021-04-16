@@ -1,4 +1,5 @@
 const db = require('../helpers/database');
+const bcrypt = require('bcrypt');
 
 //get a single user by its id  
 exports.getById = async function getById (id) {
@@ -9,15 +10,14 @@ exports.getById = async function getById (id) {
 }
 
 //get a single user by the (unique) username
-exports.findByUsername = async function findByUsername(userUsername) {
-  const query = "SELECT * FROM users WHERE userUsername = ?;";
-  const user = await db.run_query(query, userUsername);
+exports.findByUsername = async function findByUsername(username) {
+  const query = "SELECT * FROM users WHERE username = ?;";
+  const user = await db.run_query(query, username);
   return user;
 }
 
 //list all the users in the database
 exports.getAll = async function getAll (page, limit, order) {
-  // TODO: use page, limit, order to give pagination
   const query = "SELECT * FROM users;";
   const data = await db.run_query(query);
   return data;
@@ -26,6 +26,9 @@ exports.getAll = async function getAll (page, limit, order) {
 //create a new user in the database
 exports.add = async function add (user) {
   const query = "INSERT INTO users SET ?";
+  const password = user.password;
+  const hash = bcrypt.hashSync(password, 10);
+  user.password = hash;
   const data = await db.run_query(query, user);
   return data;
 }
@@ -41,6 +44,11 @@ exports.delById = async function delById (id) {
 //update an existing user
 exports.update = async function update (user) {
   const query = "UPDATE users SET ? WHERE ID = ?;";
+  if (user.password){
+    const password = user.password;
+    const hash = bcrypt.hashSync(password, 10);
+    user.password = hash;
+  }
   const values = [user, user.ID];
   const data = await db.run_query(query, values);
   return data;

@@ -1,11 +1,10 @@
 const Router = require('koa-router');
-const usersAuth = require('../controllers/users_auth');
-const employeesAuth = require('../controllers/employees_auth');
+const auth = require('../controllers/auth');
 
 const router = Router({prefix: '/api/v1'});
 
 router.get('/', publicAPI);
-router.get('/usersprivate', usersAuth, usersPrivateAPI);
+router.get('/private', auth, privateAPI);
 
 //public access header
 function publicAPI(ctx) {
@@ -15,18 +14,11 @@ function publicAPI(ctx) {
 }
 
 //private user access header
-function usersPrivateAPI(ctx){
+function privateAPI(ctx){
   const user = ctx.state.user; //this will be accessed by the done(null, user) in strategy and add user value as 'ctx.state.user'
   ctx.body = {
-    message: `Hello ${user.userUsername} you registered on ${user.dateRegistered}`
+    message: `Hello ${user.username} you registered on ${user.dateRegistered}`
   }
 }
 
-//private employee access header
-function employeesPrivateAPI(ctx){
-  const employee = ctx.state.user; //this will be accessed by the done(null, user) in strategy and add employee value as 'ctx.state.user'
-  ctx.body = {
-    message: `Hello ${employee.empUsername} you registered on ${employee.dateRegistered}`}
-}
- 
 module.exports = router;

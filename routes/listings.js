@@ -57,30 +57,32 @@ async function getById(ctx) {
 }
 
 async function createListing(ctx) {
-  const permission = can.add(ctx.state.user)
+  const body = ctx.request.body;
+  const permission = can.add(ctx.state.user);
   if (!permission.granted){
     ctx.status = 403;
   } else {
-    const body = ctx.request.body;
     let result = await listings.add(body);
     if (result.affectedRows) {
+      const id = result.insertId;
       ctx.status = 201;
       ctx.body = {ID: id, created: true, link: '${ctx.request.path}/${id}'};
     }  
   }
 }
 
-async function updateListing(ctx) {
+async function updateListing(ctx)
+{
   const id = ctx.params.id;
   let result = await listings.getById(id); //check whether it exists
   if (result.length){
     let listing = result[0];
     const permission = can.update(ctx.state.user, listing)
-    if (!permisson.granted){
+    if (!permission.granted){
       ctx.status = 403;
     } else {
       //exclude fields that should not be updated
-      const {ID, dateCreated, dateModified, userID, ...body} = ctx.request.body;
+      const {ID, dateCreated, dateModified, employeeID, ...body} = ctx.request.body;
       //overwrite updatable fileds with remaining body data
       Object.assign(listing, body);
       result = await listings.update(listing);
@@ -91,21 +93,28 @@ async function updateListing(ctx) {
   }
 }
 
-async function deleteListing (ctx) {
-  const empPermission = can.empDelete(ctx.state.user);
-  const adminPermission = can.adminDelete(ctx.state.user);
-  if(empPermission.granted){
-    const id = ctx.params.id;
-    const result = await listings.delById(id);
-    if (result.affectedRows){
-      ctx.body = {ID: id, deleted: true}
-    }
-  } else if (adminPermission.granted){
-    const id = ctx.params.id;
-    const result = await listings.delById(id);
-    if (result.affectedRows){
-      ctx.body = {ID: id, deleted: true}
-    }
+async function deleteListing (ctx)
+{
+  const id = ctx.params.id;
+  let result = await listings.getById(id);
+  if (result.length){
+    const data = result[0];
+    console.log("trying to delete", data);
+    const empPermission = can.empDelete(ctx.state.user, data);
+    const userPermission = can.adminDelete(ctx.state.user, data);
+    if (empPermission.granted){
+      const result = await listings.delById(id);
+      if (result.affectedRows) {
+        ctx.body = {ID: id, deleted: true}
+      }
+    } else if (userPermission.granted){
+      const result = await listings.delById(id);
+      if (result.affectedRows) {
+        ctx.body = {ID: id, deleted: true}
+      }
+    } else {
+      ctx.status = 403;
+    }    
   }
 }
 

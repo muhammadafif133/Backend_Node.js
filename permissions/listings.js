@@ -38,6 +38,7 @@ exports.update = (requester, data) => {
 }
 
 exports.add = (requester) => {
+  console.log(requester)
   return ac
     .can(requester.role)
     .execute('add')
@@ -56,8 +57,9 @@ exports.empDelete = (requester, data) => {
     .on('listing');
 }
 
-exports.adminDelete = (requester) => {
+exports.adminDelete = (requester,data) => {
   console.log(requester)
+  console.log(data)
   return ac
     .can(requester.role)
     .execute('delete')

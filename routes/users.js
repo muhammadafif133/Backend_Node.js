@@ -7,9 +7,11 @@ const bcrypt = require('bcrypt');
 
 const {validateUser, validateUserUpdate} = require('../controllers/validation');
 
-const router = Router({prefix: '/api/v1/users'});
+const prefix = '/canine_shelter/v1/users'
+const router = Router({prefix: prefix});
 
 //define routes for user account
+router.post('/login', auth, login);
 router.get('/', auth, getAll);
 router.post('/', bodyParser(), validateUser, createUser);
 router.get('/:id([0-9]{1,})', auth, getById);
@@ -17,6 +19,17 @@ router.put('/:id([0-9]{1,})', auth, bodyParser(), validateUserUpdate, updateUser
 router.del('/:id([0-9]{1,})', auth, deleteUser);
 
 
+// Function for login
+async function login(ctx) {
+  // return any details needed by the client
+  const {ID, username, email, avatarURL} = ctx.state.user
+  const links = {
+    self: `${ctx.protocol}://${ctx.host}${prefix}/${ID}`
+  }
+  ctx.body = {ID, username, email, avatarURL, links};
+}
+
+// Function to get all users account
 async function getAll(ctx) {
   const permission = can.readAll(ctx.state.user);
 
@@ -30,6 +43,7 @@ async function getAll(ctx) {
   }
 }
 
+// Function to get all users account by ID
 async function getById(ctx) {
   const id = ctx.params.id;
   const result = await model.getById(id);
@@ -48,7 +62,7 @@ async function getById(ctx) {
 }
 
 
-
+// Function to get create users account 
 async function createUser(ctx) {
   const body = ctx.request.body;
   const result = await model.add(body);
@@ -59,9 +73,10 @@ async function createUser(ctx) {
   }
 }
 
+// Function to update users account
 async function updateUser(ctx) {
   const id = ctx.params.id;
-  let result = await model.getById(id);  // check it exists
+  let result = await model.getById(id);  // check if exists
   if (result.length) {
     let data = result[0];
     const empPermission = can.empUpdate(ctx.state.user, data);
@@ -90,6 +105,7 @@ async function updateUser(ctx) {
   }
 }
 
+// Function to delete users account 
 async function deleteUser(ctx) {
   const id = ctx.params.id;
   let result = await model.getById(id);
@@ -113,7 +129,6 @@ async function deleteUser(ctx) {
     }    
   }
 }
-
 
 
 module.exports = router;

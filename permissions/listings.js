@@ -46,6 +46,7 @@ exports.add = (requester) => {
     .on('listing');
 }
 
+// Different delete method for employee and admin
 exports.empDelete = (requester, data) => {
   console.log(requester)
   console.log(data)

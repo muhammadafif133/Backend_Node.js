@@ -31,6 +31,7 @@ ac
   .execute('update')
   .on('employee', ['firstName', 'lastName', 'about', 'password', 'email', 'avatarURL']);
 
+//---------------------------------------------
 //Grant admin-role permission on DB users resource
 ac
   .grant('admin')
@@ -64,12 +65,14 @@ ac
   .condition({Fn:'NOT_EQUALS', args: {'requester':'$.owner'}})
   .execute('delete')
   .on('user');
+
 ac
   .grant('admin')
   .condition({Fn:'NOT_EQUALS', args: {'requester':'$.owner'}})
   .execute('delete')
   .on('employee');
 
+//---------------------------------------------
 //Exports method for admin
 exports.readAll = (requester) => {
   return ac
@@ -79,6 +82,7 @@ exports.readAll = (requester) => {
     .on('users','employees');
 }
 
+//---------------------------------------------
 //Exports method for employee checking permissions
 exports.empRead = (requester, data) => {
   return ac
@@ -107,6 +111,7 @@ exports.empDelete = (requester, data) => {
     .on('employee');
 }
 
+//---------------------------------------------
 //Exports method for user checking permissions
 
 exports.userRead = (requester, data) => {

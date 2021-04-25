@@ -9,7 +9,7 @@ const favourites = require('../models/favourites');
 
 const {validateListing} = require('../controllers/validation');
 
-const prefix = '/api/v1/listings';
+const prefix = '/canine_shelter/v1/listings';
 const router = Router({prefix: prefix});
 
 //define listing routes used
@@ -47,6 +47,7 @@ async function getAll(ctx) {
   }
 }
 
+// Function to get a dog listing by ID
 async function getById(ctx) {
   const id = ctx.params.id;
   const result = await listings.getById(id);
@@ -56,6 +57,7 @@ async function getById(ctx) {
   }
 }
 
+// Function to create dog listing 
 async function createListing(ctx) {
   const body = ctx.request.body;
   const permission = can.add(ctx.state.user);
@@ -71,6 +73,7 @@ async function createListing(ctx) {
   }
 }
 
+// Function to update dog listing
 async function updateListing(ctx)
 {
   const id = ctx.params.id;
@@ -93,6 +96,7 @@ async function updateListing(ctx)
   }
 }
 
+// Function to delete dog listing
 async function deleteListing (ctx)
 {
   const id = ctx.params.id;
@@ -101,13 +105,13 @@ async function deleteListing (ctx)
     const data = result[0];
     console.log("trying to delete", data);
     const empPermission = can.empDelete(ctx.state.user, data);
-    const userPermission = can.adminDelete(ctx.state.user, data);
+    const adminPermission = can.adminDelete(ctx.state.user, data);
     if (empPermission.granted){
       const result = await listings.delById(id);
       if (result.affectedRows) {
-        ctx.body = {ID: id, deleted: true}
+        ctx.body = {ID: id, deleted: true} 
       }
-    } else if (userPermission.granted){
+    } else if (adminPermission.granted){
       const result = await listings.delById(id);
       if (result.affectedRows) {
         ctx.body = {ID: id, deleted: true}
@@ -139,7 +143,7 @@ async function delFavouriteList (ctx) {
 
 async function listByUserId(ctx){
   const uid = ctx.state.user.ID;
-  const result = await model.getList(uid);
+  const result = await favourites.getList(uid);
   if (result.length){
     const list = result[0];
     ctx.body = list;

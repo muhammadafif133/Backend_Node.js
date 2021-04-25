@@ -8,28 +8,28 @@ const verifyPassword = function (user, password) {
   return isMatch;
 }
 
-const checkUserAndPass = async (userUsername, password, done) => {
+const checkUserAndPass = async (username, password, done) => {
   // look up the user and check the password if the user exists
 
   let result;
 
   try {
-    result = await users.findByUsername(userUsername);
+    result = await users.findByUsername(username);
   } catch (error) {
-    console.error(`Error during authentication for user ${userUsername}`);
+    console.error(`Error during authentication for user ${username}`);
     return done(error);
   }
-
+  // Verify user 
   if (result.length) {
     const user = result[0];
     if (verifyPassword(user, password)) {
-      console.log(`Successfully authenticated user ${userUsername}`);
+      console.log(`Successfully authenticated user ${username}`);
       return done(null, user);
     } else {
-      console.log(`Password incorrect for user ${userUsername}`);
+      console.log(`Password incorrect for user ${username}`);
     }
   } else {
-    console.log(`No user found with username ${userUsername}`);
+    console.log(`No user found with username ${username}`);
   }
   return done(null, false); //username and password incorrect
 }

@@ -10,5 +10,5 @@ CREATE TABLE listings (
       location VARCHAR(256),
       breeds VARCHAR(32),
       PRIMARY KEY (ID),
-      FOREIGN KEY (employeeID) REFERENCES employee (ID)
+      FOREIGN KEY (employeeID) REFERENCES users (ID)
 );

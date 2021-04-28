@@ -15,7 +15,7 @@ exports.delFavourite = async function delFavourite (id, uid) {
 }
 
 //get list of favourites on listing from a user
-exports.getList = async function getList (uid) {
+exports.getFavourites = async function getFavourites (uid) {
   const query = "SELECT * FROM dogFavourites WHERE userID=?;";
   const data = await db.run_query(query, [uid]);
   return data;

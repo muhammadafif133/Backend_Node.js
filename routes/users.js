@@ -12,12 +12,12 @@ const router = Router({prefix: prefix});
 
 //define routes for user account
 router.post('/login', auth, login);
-router.get('/:id([0-9]{1,})/signUpCode', getUserRole )
 router.get('/', auth, getAll);
 router.post('/', bodyParser(), validateUser, createUser);
 router.get('/:id([0-9]{1,})', auth, getById);
 router.put('/:id([0-9]{1,})', auth, bodyParser(), validateUserUpdate, updateUser);
 router.del('/:id([0-9]{1,})', auth, deleteUser);
+router.get('/:id([0-9]{1,})/signUpCode', getUserRole )
 
 
 // Function for login
@@ -38,9 +38,8 @@ async function getAll(ctx) {
     ctx.status = 403;
   } else {
     console.log(ctx.request.query);
-    
-    let {limit = 10, page = 1, fields = null } = ctx.request.requery;
-    
+    /*
+    let { limit=10, page=1, fields=null } = ctx.request.requery;
     //Ensure parameters are in integer
     limit = parseInt(limit);
     page = parseInt(page);
@@ -48,9 +47,10 @@ async function getAll(ctx) {
     // Validate pagination values to ensure they are sensible 
     limit = limit > 100 ? 100 : limit;
     limit = limit < 1 ? 10 : limit;
-    page = page < 1 ? 1 : page;
+    page = page < 1 ? 1 : page;*/
     
-    let result = await model.getAll(limit, page);
+    let {users, fields=null} = ctx.request.query;
+    let result = await model.getAll(users);
     if (result.length) {
       if (fields !== null){
         // ensure the fields are contained in an array

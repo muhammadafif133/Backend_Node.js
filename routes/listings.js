@@ -20,7 +20,7 @@ router.put('/:id([0-9]{1,})', auth, bodyParser(), validateListing, updateListing
 router.del('/:id([0-9]{1,})', auth, deleteListing);
 
 //define favourite routes used
-router.get('/:id([0-9]{1,})/favourites', auth, listByUserId);
+router.get('/:id([0-9]{1,})/favourites', auth, getAllFavourite);
 router.post('/:id([0-9]{1,})/favourites', auth, favouriteList);
 router.del('/:id([0-9]{1,})/favourites', auth, delFavouriteList);
 router.get('/:id([0-9]{1,})/favourites', favouritesCount);
@@ -159,12 +159,11 @@ async function delFavouriteList (ctx) {
   ctx.body = result.affectedRows ? {message: "Remove favourite"} : {message: "error"};
 }
 
-async function listByUserId(ctx){
-  const uid = ctx.state.user.ID;
-  const result = await favourites.getList(uid);
+async function getAllFavourite(ctx){
+  const id = ctx.params.id;
+  const result = await favourites.getAllFavourite(id);
   if (result.length){
-    const list = result[0];
-    ctx.body = list;
+    ctx.body = result;
   }
 }
 

@@ -16,11 +16,18 @@ exports.findByUsername = async function findByUsername(username) {
   return user;
 }
 
-//list all the users in the database
+/*list all the users in the database
 exports.getAll = async function getAll (limit = 10, page =1) {
   const offset = (page - 1) * limit;
   const query = "SELECT * FROM users LIMIT ?,?;";
   const data = await db.run_query(query, [offset, limit]);
+  return data;
+}*/
+
+//list all the users in the database
+exports.getAll = async function getAll (users) {
+  const query = "SELECT * FROM users ;";
+  const data = await db.run_query(query, users);
   return data;
 }
 

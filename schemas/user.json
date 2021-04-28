@@ -36,7 +36,11 @@
 					"description": "Password for registration",
 					"type": "string",
 					"minLength": 6
-				}
+				},
+        "role": {
+          "description": "Role allocated for users",
+          "type": "string"
+        }
 			},
 			"required": [
 				"username",
@@ -111,6 +115,14 @@
           "description": "Password for registration",
           "type": "string",
           "minLength": 6
+        },
+        "passwordSalt": {
+          "description": "Password salt for registration",
+          "type": "string" 
+        },
+        "role": {
+          "description": "Role validation",
+          "type": "string"
         }
       },
       "additionalProperties": false

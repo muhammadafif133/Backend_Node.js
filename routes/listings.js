@@ -29,19 +29,33 @@ router.get('/:id([0-9]{1,})/favourites', favouritesCount);
 //listing functions
 
 async function getAll(ctx) {
-  const {page=1, limit=100, order="dateCreated", direction='ASC'} = ctx.request.query;
+  let {page=1, limit=10, order="dateCreated", direction='DESC'} = ctx.request.query;
+  
+  //ensure paramas are integers
+  //limit = parseInt(limit);
+  //page = parseInt(page);
+  
+  //validate pagination values to ensure they are sensible
+  limit = limit > 100 ? 100 : limit;
+  limit = limit < 1 ? 10 : limit;
+  page = page < 1 ? 1 : page;
+  
+  order = ['dateCreated', 'dateModified'].includes(order) ? order : 'dateCreated';
+  direction = ['ASC', 'DESC'].includes(direction) ? direction : 'ASC';
+  
+  
   const result = await listings.getAll(page, limit, order, direction);
   if (result.length) {
     const body = result.map(post => {
       // extract the post fields we want to send back (summary details)
-      const {ID, dogName, summary, imageURL, employeeID} = post;
+      const {ID, dogName, details, imageURL, breeds, location, dateCreated} = post;
       // add links to the post summaries for HATEOAS compliance
       // clients can follow these to find related resources
       const links = {
-        favourites: `${ctx.protocol}://${ctx.host}${prefix}/${post.ID}/favourites`,
-        self: `${ctx.protocol}://${ctx.host}${prefix}/${post.ID}`
+        favourites: `${ctx.protocol}s://${ctx.host}${prefix}/${post.ID}/favourites`,
+        self: `${ctx.protocol}s://${ctx.host}${prefix}/${post.ID}`
       }
-      return {ID, dogName, summary, imageURL, employeeID, links};
+      return {ID, dogName, details, imageURL, breeds, location, dateCreated, links};
     });
     ctx.body = body;
   }
@@ -59,7 +73,11 @@ async function getById(ctx) {
 
 // Function to create dog listing 
 async function createListing(ctx) {
-  const body = ctx.request.body;
+  let body = ctx.request.body;
+  console.log(body);
+  const uid = ctx.state.user.ID;
+  body.employeeID = uid;
+  console.log("show" + JSON.stringify(body));
   const permission = can.add(ctx.state.user);
   if (!permission.granted){
     ctx.status = 403;

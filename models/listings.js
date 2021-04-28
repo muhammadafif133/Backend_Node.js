@@ -9,7 +9,7 @@ exports.getById = async function getById (id) {
 }
 
 //list all the listings in the database
-exports.getAll = async function getAll (page, limit, order) {
+exports.getAll = async function getAll (page, limit, order, direction) {
   const offset = (page - 1) * limit;
   let query;
   if (direction === 'DESC'){
@@ -17,14 +17,14 @@ exports.getAll = async function getAll (page, limit, order) {
   } else {
     query = "SELECT * FROM listings ORDER BY ?? ASC LIMIT ? OFFSET ?;";
   }
-  const values = [order, parseInt(limit), parseInt(offset)];
+  const values = [order, limit, offset];
   const data = await db.run_query(query, values);
   return data;
 }
 
 //create a new listing in the database
 exports.add = async function add (listing) {
-  let query = "INSERT INTO listings SET ?";
+  let query = "INSERT INTO listings SET ?;"
   let data = await db.run_query(query, listing);
   return data;
 }

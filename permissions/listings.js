@@ -5,7 +5,6 @@ const ac = new AccessControl();
 // don't let users update an listing ID or the employeeID
 ac
   .grant('employee')
-  .condition({Fn:'EQUALS', args: {'requester':'$.owner'}})
   .execute('update')
   .on('listing');
 
@@ -16,7 +15,6 @@ ac
 
 ac
   .grant('employee')
-  .condition({Fn:'EQUALS', args: {'requester':'$.owner'}})
   .execute('delete')
   .on('listing');
 
@@ -26,12 +24,9 @@ ac
   .on('listing');
 
 //Exports method for checking permissions
-exports.update = (requester, data) => {
-    console.log(requester)
-    console.log(data)
+exports.update = (requester) => {
   return ac
     .can(requester.role)
-    .context({requester:requester.ID, owner:data.employeeID})
     .execute('update')
     .sync()
     .on('listing');
@@ -52,7 +47,6 @@ exports.empDelete = (requester, data) => {
   console.log(data)
   return ac
     .can(requester.role)
-    .context({requester:requester.ID, owner:data.employeeID})
     .execute('delete')
     .sync()
     .on('listing');

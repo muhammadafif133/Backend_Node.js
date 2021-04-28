@@ -17,15 +17,16 @@ exports.findByUsername = async function findByUsername(username) {
 }
 
 //list all the users in the database
-exports.getAll = async function getAll (page, limit, order) {
-  const query = "SELECT * FROM users;";
-  const data = await db.run_query(query);
+exports.getAll = async function getAll (limit = 10, page =1) {
+  const offset = (page - 1) * limit;
+  const query = "SELECT * FROM users LIMIT ?,?;";
+  const data = await db.run_query(query, [offset, limit]);
   return data;
 }
 
 //create a new user in the database
 exports.add = async function add (user) {
-  const query = "INSERT INTO users SET ?";
+  const query = "INSERT INTO users SET ?;";
   const password = user.password;
   const hash = bcrypt.hashSync(password, 10);
   user.password = hash;
@@ -52,5 +53,13 @@ exports.update = async function update (user) {
   const values = [user, user.ID];
   const data = await db.run_query(query, values);
   return data;
+}
+
+//find users secret code
+exports.findSecretCode = async function findSecretCode(secretCode){
+  const query = "SELECT name FROM roles WHERE secretCode = ?;";
+  const data = await db.run_query(query, [secretCode]);
+  return data;
+  
 }
 

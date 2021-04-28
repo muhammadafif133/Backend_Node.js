@@ -11,26 +11,28 @@ info:
     url: 'https://www.apache.org/license/LICENSE-2.0.html'
     
 servers:
-  - url: 'https://pilot-energy-3000.codio-box.uk/api/v1'
+  - url: 'https://pilot-energy-3000.codio-box.uk/canine_shelter/v1'
     description: Development server
     
 tags:
   - name: Users
     description: API endpoints for user management.
   - name: Listings
-    description: Access and perform CRUD operations on blog entries.
+    description: Access and perform CRUD operations on dog entries.
+  - name: Favourites
+    description: API endpoints for favourite activities.
 
 paths:
   /users:
-    summary: Represents an individual users
+    summary: Represents an individual user
     description: >
-      This rsource represents an individual user in the system.
+      This resource represents an individual user in the system.
       Each user is identified by a numeric `id`.
     post:
       tags:
         - Users:
       description:
-        Create a new uer account.
+        Create a new user account.
       requestBody:
         description: All new user data.
         required: true

@@ -4,15 +4,18 @@
   "description": "backend coursework submission",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --testTimeout=10000",
+    "test:watch": "jest --watch",
+    "testDB:drop": "mysql --user=root --password=codio -e 'DROP DATABASE test_db;'",
+    "testDB:create": "mysql --user=root --password=codio -e 'CREATE DATABASE test_db;'",
+    "testDB:migrate": "mysqldump --user=root --password=codio canine_shelter | mysql --user=root --password=codio test_db",
+    "pretest": "npm run testDB:drop && npm run testDB:create && npm run testDB:migrate
   },
   "jest": {
-  "testEnvironment": "node",
-  "coveragePathIgnorePatterns": [
-    "/node_modules/"
-  ]
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   },
   "repository": {
     "type": "git",
@@ -23,7 +26,6 @@
     "coursework",
     "submission"
   ],
-  
   "author": "Muhammad Afif bin Zainuddin",
   "license": "ISC",
   "dependencies": {

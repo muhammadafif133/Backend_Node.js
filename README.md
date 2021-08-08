@@ -1,4 +1,1 @@
-# coursework_submission_backend_10685675
-Backend Coursework Submission, 
-Name: Muhammad Afif bin Zainuddin, 
-Student ID: 10685675
+This repository is the backend code for my Dog Shelter Website coded with Javascript with RESTful Node JS API.
